@@ -34,8 +34,8 @@ function App() {
         <Schedule />
         <Footer />{ЭТО НУЖНО}
         
-        <CountLaik />*/ } 
-        <TopIcon/>
+        <CountLaik />
+        <TopIcon/>*/ } 
         <News />
         { /*<a
           className="App-link"
