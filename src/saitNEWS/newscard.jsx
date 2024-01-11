@@ -120,8 +120,29 @@ export default function NewsCard({
         </Grid>
       </Grid>
       <Modal open={expanded} onClose={handleCloseModal}>
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}>
-          <div style={{ position: "absolute", top: 25, left: "10%", right: "10%", bottom: "10%", padding: 15, backgroundColor: "white" }}>
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            overflowY: "auto", // Добавляем вертикальную полосу прокрутки
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              top: 25,
+              left: "10%",
+              right: "10%",
+              bottom: "10%",
+              padding: 15,
+              backgroundColor: "white",
+              overflowY: "auto", // Добавляем вертикальную полосу прокрутки
+              maxHeight: "80vh", // Задаем максимальную высоту
+            }}
+          >
             <IconButton
               onClick={handleCloseModal}
               style={{ position: "absolute", top: 0, right: 0 }}
