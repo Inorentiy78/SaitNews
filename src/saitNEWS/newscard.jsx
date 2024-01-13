@@ -16,9 +16,6 @@ import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import CloseIcon from "@mui/icons-material/Close";
 import { Link, useHistory } from "react-router-dom";
 
-// ... (ваш импорт)
-// ... (остальной импорт)
-
 export default function NewsCard({
   title,
   datetime,
