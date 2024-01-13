@@ -16,6 +16,9 @@ import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import CloseIcon from "@mui/icons-material/Close";
 import { Link, useHistory } from "react-router-dom";
 
+// ... (ваш импорт)
+// ... (остальной импорт)
+
 export default function NewsCard({
   title,
   datetime,
@@ -25,6 +28,7 @@ export default function NewsCard({
   onLike,
   onDislike,
   handleReadMore,
+  onCloseModal,
   likes,
   dislikes,
 }) {
@@ -53,6 +57,7 @@ export default function NewsCard({
 
   const handleCloseModal = () => {
     setExpanded(false);
+    onCloseModal && onCloseModal();
   };
 
   const handleReadMoreClick = () => {
@@ -61,64 +66,58 @@ export default function NewsCard({
   };
 
   return (
-    <Card
+    <div style={{ width: "45%", margin: "1px" }}>
+      <Card
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          height: "70%",
+          margin: "auto", // Центрируем карточку
+          color:"darkgreen",
+        }}
+      >
+        <Typography
+      variant="h6"
+      noWrap
+      component="a"
+      href="#your-link"
       sx={{
-        maxWidth: "400px",
-        maxHeight: "600px",
-        display: "flex",
-        flexDirection: { xs: "column", md: "row" },
-        overflow: "hidden",
-        margin: "20px",
+        fontFamily: "monospace",
+        fontWeight: 700,
+        letterSpacing: ".1rem", // Установите желаемое расстояние между буквами
+        color: "red", // Замените на цвет, который вам нужен
+        textDecoration: "none",
       }}
     >
-      <Grid container>
-        <Grid item xs={12} md={12}>
-          <CardHeader title={title} subheader={datetime} />
-          <CardMedia
-            component="img"
-            image={image}
-            alt="Image"
-            sx={{ width: "100%", height: "auto" }}
-          />
-          <CardContent>
-            {expanded && (
-              <div>
-                <Typography variant="body2" color="text.secondary">
-                  {description}
-                </Typography>
-                <div>
-                  <IconButton aria-label="add to favorites" onClick={handleLikeClick}>
-                    <ThumbUpOffAltIcon sx={{ color: liked ? "red" : "gray" }} />
-                  </IconButton>
+      NEWS
+    </Typography>
+        <Grid container>
+          <Grid item xs={12} md={12}>
+            <CardHeader title={title} subheader={datetime} />
+            <CardMedia
+              component="img"
+              image={image}
+              alt="Image"
+              sx={{ width: "100%", height: "auto" }}
+            />
+            <CardContent>
+              {/* Уберите условие expanded отсюда */}
+            </CardContent>
+            <CardActions
+              disableSpacing
+              sx={{ paddingTop: 1, paddingBottom: 0, justifyContent: "space-between" }}
+            >
+              <IconButton aria-label="show more" onClick={handleReadMoreClick}>
+                <div style={{ cursor: 'pointer' }}>
                   <Typography variant="body2" color="text.secondary">
-                    {likeCount}
+                    {expanded ? "Скрыть" : "Подробнее"}
                   </Typography>
                 </div>
-                <div>
-                  <IconButton aria-label="add to favorites" onClick={handleDislikeClick}>
-                    <ThumbDownOffAltIcon sx={{ color: disliked ? "red" : "gray" }} />
-                  </IconButton>
-                  <Typography variant="body2" color="text.secondary">
-                    {dislikeCount}
-                  </Typography>
-                </div>
-              </div>
-            )}
-          </CardContent>
-          <CardActions
-            disableSpacing
-            sx={{ paddingTop: 1, paddingBottom: 0, justifyContent: "space-between" }}
-          >
-            <IconButton aria-label="show more" onClick={handleReadMoreClick}>
-              <Link to={`/news/${index}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                <Typography variant="body2" color="text.secondary">
-                  {expanded ? "Скрыть" : "Подробнее"}
-                </Typography>
-              </Link>
-            </IconButton>
-          </CardActions>
+              </IconButton>
+            </CardActions>
+          </Grid>
         </Grid>
-      </Grid>
+      </Card>
       <Modal open={expanded} onClose={handleCloseModal}>
         <div
           style={{
@@ -162,25 +161,27 @@ export default function NewsCard({
             <Typography variant="body2" color="text.secondary">
               {description}
             </Typography>
-            <div>
-              <IconButton aria-label="add to favorites" onClick={handleLikeClick}>
-                <ThumbUpOffAltIcon sx={{ color: liked ? "red" : "gray" }} />
-              </IconButton>
-              <Typography variant="body2" color="text.secondary">
-                {likeCount}
-              </Typography>
-            </div>
-            <div>
-              <IconButton aria-label="add to favorites" onClick={handleDislikeClick}>
-                <ThumbDownOffAltIcon sx={{ color: disliked ? "red" : "gray" }} />
-              </IconButton>
-              <Typography variant="body2" color="text.secondary">
-                {dislikeCount}
-              </Typography>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div style={{ marginRight: '8px' }}>
+                <IconButton aria-label="add to favorites" onClick={handleLikeClick}>
+                  <ThumbUpOffAltIcon sx={{ color: liked ? "red" : "gray" }} />
+                </IconButton>
+                <Typography variant="body2" color="text.secondary">
+                  {likeCount}
+                </Typography>
+              </div>
+              <div>
+                <IconButton aria-label="add to favorites" onClick={handleDislikeClick}>
+                  <ThumbDownOffAltIcon sx={{ color: disliked ? "red" : "gray" }} />
+                </IconButton>
+                <Typography variant="body2" color="text.secondary">
+                  {dislikeCount}
+                </Typography>
+              </div>
             </div>
           </div>
         </div>
       </Modal>
-    </Card>
+    </div>
   );
 }
