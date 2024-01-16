@@ -1,5 +1,5 @@
 // newscard.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -18,6 +18,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import ShareIcon from '@mui/icons-material/Share';
 import { styled } from '@mui/system';
 import { Link, useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const AdaptiveCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -52,8 +53,17 @@ export default function NewsCard({
   const [likeCount, setLikeCount] = useState(0);
   const [dislikeCount, setDislikeCount] = useState(0);
   const [expanded, setExpanded] = useState(false);
-  const { id: routeId } = useParams(); // Изменение: получаем параметр id из URL
   const [copied, setCopied] = useState(false); 
+  const [modalOpen, setModalOpen] = useState(false);
+  const history = useHistory();
+  const { id: routeId } = useParams();
+
+  useEffect(() => {
+    if (routeId === id) {
+      handleReadMoreClick();
+    }
+  }, [routeId, id]);
+
   const handleLikeClick = () => {
     setLikeCount((prevCount) => (prevCount === 0 ? 1 : 0));
     setDislikeCount(0);
@@ -79,6 +89,7 @@ export default function NewsCard({
     setExpanded(true);
     handleReadMore && handleReadMore(index);
   };
+  
 
   return (
     <>
@@ -151,21 +162,31 @@ export default function NewsCard({
               maxHeight: "80vh",
             }}
           >
-             <IconButton
-              onClick={() => {
-                navigator.clipboard.writeText(`http://localhost:3000/news/${id || index}`);
-                setCopied(true);
+              <IconButton
+  onClick={() => {
+    navigator.clipboard.writeText(`http://localhost:3000/news/${id || index}`);
+    setCopied(true);
 
-                // Устанавливаем таймер для сброса статуса "Скопировано" через 1 секунду
-                setTimeout(() => {
-                  setCopied(false);
-                }, 1000);
-              }}
-              style={{ position: "absolute", top: 0, left: 0 }}
-            >
-              <ShareIcon />
-            </IconButton>
-            {copied && <div style={{ color: "green" }}>Скопировано</div>}
+    // Устанавливаем таймер для сброса статуса "Скопировано" через 1 секунду
+    setTimeout(() => {
+      setCopied(false);
+    }, 1000);
+
+    // Если есть routerHistory, то делаем редирект на новость
+    if (history) {
+      history.push(`/news/${id || index}`);
+    } else {
+      // Если нет routerHistory, открываем модальное окно напрямую
+      handleReadMoreClick();
+    }
+  }}
+  style={{ position: "absolute", top: 0, left: 0 }}
+>
+  <ShareIcon />
+</IconButton>
+
+{copied && <div style={{ color: "green" }}>Скопировано</div>}
+
             <h1>{title}</h1>
             <CardMedia
               component="img"
