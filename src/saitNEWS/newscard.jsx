@@ -15,8 +15,9 @@ import {
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import CloseIcon from "@mui/icons-material/Close";
+import ShareIcon from '@mui/icons-material/Share';
 import { styled } from '@mui/system';
-import { useHistory } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const AdaptiveCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -24,9 +25,11 @@ const AdaptiveCard = styled(Card)(({ theme }) => ({
   width: '100%', // Используем 100% ширины на мобильных устройствах
   margin: '10px', // Задайте нужное значение отступа
   color: 'darkgreen',
-  
+  [theme.breakpoints.up('md')]: {
+    width: '300px',
+  },
   [theme.breakpoints.down('sm')]: {
-    width: '100%', // Изменяем ширину для экранов менее 600px
+    width: '80%', // Изменяем ширину для экранов менее 700px
   },
 }));
 
@@ -42,13 +45,14 @@ export default function NewsCard({
   onCloseModal,
   likes,
   dislikes,
+  id,
 }) {
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [dislikeCount, setDislikeCount] = useState(0);
   const [expanded, setExpanded] = useState(false);
-  const history = useHistory();
+  const { id: routeId } = useParams(); // Изменение: получаем параметр id из URL
 
   const handleLikeClick = () => {
     setLikeCount((prevCount) => (prevCount === 0 ? 1 : 0));
@@ -78,21 +82,12 @@ export default function NewsCard({
 
   return (
     <>
-     <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}/>
-     {/*<Card 
-     sx={{
-        display: "flex", 
-        flexDirection: "column", 
-        width: "100%",
-        margin: "10px", 
-        color: "darkgreen" 
-     }}/>*/}
-     <AdaptiveCard>
+      <AdaptiveCard>
         <Typography
           variant="h6"
           noWrap
-          component="a"
-          href="#your-link"
+          component={Link}
+          to={`/news/${id || index}`} // Исправлено: теперь используется id вместо index
           sx={{
             fontFamily: "monospace",
             fontWeight: 700,
@@ -103,39 +98,43 @@ export default function NewsCard({
         >
           NEWS
         </Typography>
-        <CardHeader title={title} />
-        <CardMedia
-          component="img"
-          image={image}
-          alt="Image"
-          sx={{ width: "100%", height: "auto" }}
-        />
-        <CardContent>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            display="flex"
-            justifyContent="space-between"
-          >
-            {datetime}
-          </Typography>
-        </CardContent>
-        <CardActions
-          disableSpacing
-          sx={{
-            paddingTop: 1,
-            paddingBottom: 0,
-            justifyContent: "space-between",
-          }}
-        >
-          <IconButton aria-label="show more" onClick={handleReadMoreClick}>
-            <div style={{ cursor: "pointer" }}>
-              <Typography variant="body2" color="text.secondary">
-                {expanded ? "Скрыть" : "Подробнее"}
+        <Grid container>
+          <Grid item xs={12} md={12}>
+            <CardHeader title={title} />
+            <CardMedia
+              component="img"
+              image={image}
+              alt="Image"
+              sx={{ width: "100%", height: "auto" }}
+            />
+            <CardContent>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                display="flex"
+                justifyContent="space-between"
+              >
+                {datetime}
               </Typography>
-            </div>
-          </IconButton>
-        </CardActions>
+            </CardContent>
+            <CardActions
+              disableSpacing
+              sx={{
+                paddingTop: 1,
+                paddingBottom: 0,
+                justifyContent: "space-between",
+              }}
+            >
+              <IconButton aria-label="show more" onClick={handleReadMoreClick}>
+                <div style={{ cursor: "pointer" }}>
+                  <Typography variant="body2" color="text.secondary">
+                    {expanded ? "Скрыть" : "Подробнее"}
+                  </Typography>
+                </div>
+              </IconButton>
+            </CardActions>
+          </Grid>
+          </Grid>
       </AdaptiveCard>
       <Modal open={expanded} onClose={handleCloseModal}>
         <ClickAwayListener onClickAway={handleCloseModal}>
@@ -153,10 +152,12 @@ export default function NewsCard({
             }}
           >
             <IconButton
-              onClick={handleCloseModal}
-              style={{ position: "absolute", top: 0, right: 0 }}
+              onClick={() => {
+                navigator.clipboard.writeText(`http://localhost:3000/news/${id || index}`);
+              }}
+              style={{ position: "absolute", top: 0, left: 0 }}
             >
-              <CloseIcon />
+              <ShareIcon />
             </IconButton>
             <h1>{title}</h1>
             <CardMedia
