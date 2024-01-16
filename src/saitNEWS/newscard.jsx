@@ -10,11 +10,25 @@ import {
   Typography,
   Grid,
   Modal,
+  ClickAwayListener,
 } from "@mui/material";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 import CloseIcon from "@mui/icons-material/Close";
-import { Link, useHistory } from "react-router-dom";
+import { styled } from '@mui/system';
+import { useHistory } from 'react-router-dom';
+
+const AdaptiveCard = styled(Card)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%', // Используем 100% ширины на мобильных устройствах
+  margin: '10px', // Задайте нужное значение отступа
+  color: 'darkgreen',
+  
+  [theme.breakpoints.down('sm')]: {
+    width: '100%', // Изменяем ширину для экранов менее 600px
+  },
+}));
 
 export default function NewsCard({
   title,
@@ -63,69 +77,68 @@ export default function NewsCard({
   };
 
   return (
-    <div style={{ width: "45%", margin: "1px" }}>
-      <Card
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          height: "70%",
-          margin: "auto", // Центрируем карточку
-          color:"darkgreen",
-        }}
-      >
+    <>
+     <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}/>
+     {/*<Card 
+     sx={{
+        display: "flex", 
+        flexDirection: "column", 
+        width: "100%",
+        margin: "10px", 
+        color: "darkgreen" 
+     }}/>*/}
+     <AdaptiveCard>
         <Typography
-      variant="h6"
-      noWrap
-      component="a"
-      href="#your-link"
-      sx={{
-        fontFamily: "monospace",
-        fontWeight: 700,
-        letterSpacing: ".1rem", // Установите желаемое расстояние между буквами
-        color: "red", // Замените на цвет, который вам нужен
-        textDecoration: "none",
-      }}
-    >
-      NEWS
-    </Typography>
-        <Grid container>
-          <Grid item xs={12} md={12}>
-            <CardHeader title={title} subheader={datetime} />
-            <CardMedia
-              component="img"
-              image={image}
-              alt="Image"
-              sx={{ width: "100%", height: "auto" }}
-            />
-            <CardContent>
-              {/* Уберите условие expanded отсюда */}
-            </CardContent>
-            <CardActions
-              disableSpacing
-              sx={{ paddingTop: 1, paddingBottom: 0, justifyContent: "space-between" }}
-            >
-              <IconButton aria-label="show more" onClick={handleReadMoreClick}>
-                <div style={{ cursor: 'pointer' }}>
-                  <Typography variant="body2" color="text.secondary">
-                    {expanded ? "Скрыть" : "Подробнее"}
-                  </Typography>
-                </div>
-              </IconButton>
-            </CardActions>
-          </Grid>
-        </Grid>
-      </Card>
-      <Modal open={expanded} onClose={handleCloseModal}>
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            overflowY: "auto", // Добавляем вертикальную полосу прокрутки
+          variant="h6"
+          noWrap
+          component="a"
+          href="#your-link"
+          sx={{
+            fontFamily: "monospace",
+            fontWeight: 700,
+            letterSpacing: ".1rem",
+            color: "red",
+            textDecoration: "none",
           }}
         >
+          NEWS
+        </Typography>
+        <CardHeader title={title} />
+        <CardMedia
+          component="img"
+          image={image}
+          alt="Image"
+          sx={{ width: "100%", height: "auto" }}
+        />
+        <CardContent>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            display="flex"
+            justifyContent="space-between"
+          >
+            {datetime}
+          </Typography>
+        </CardContent>
+        <CardActions
+          disableSpacing
+          sx={{
+            paddingTop: 1,
+            paddingBottom: 0,
+            justifyContent: "space-between",
+          }}
+        >
+          <IconButton aria-label="show more" onClick={handleReadMoreClick}>
+            <div style={{ cursor: "pointer" }}>
+              <Typography variant="body2" color="text.secondary">
+                {expanded ? "Скрыть" : "Подробнее"}
+              </Typography>
+            </div>
+          </IconButton>
+        </CardActions>
+      </AdaptiveCard>
+      <Modal open={expanded} onClose={handleCloseModal}>
+        <ClickAwayListener onClickAway={handleCloseModal}>
           <div
             style={{
               position: "absolute",
@@ -135,8 +148,8 @@ export default function NewsCard({
               bottom: "10%",
               padding: 15,
               backgroundColor: "white",
-              overflowY: "auto", // Добавляем вертикальную полосу прокрутки
-              maxHeight: "80vh", // Задаем максимальную высоту
+              overflowY: "auto",
+              maxHeight: "80vh",
             }}
           >
             <IconButton
@@ -146,15 +159,15 @@ export default function NewsCard({
               <CloseIcon />
             </IconButton>
             <h1>{title}</h1>
-            <Typography variant="body2" color="text.secondary">
-              Datetime: {datetime}
-            </Typography>
             <CardMedia
               component="img"
               image={image}
               alt="Image"
               sx={{ width: "200px", height: "200px", marginRight: "10px" }}
             />
+            <Typography variant="body3" color="black" style={{ fontWeight: 'bold' }}>
+              {datetime}
+            </Typography>
             <Typography variant="body2" color="text.secondary">
               {description}
             </Typography>
@@ -177,8 +190,8 @@ export default function NewsCard({
               </div>
             </div>
           </div>
-        </div>
+        </ClickAwayListener>
       </Modal>
-    </div>
+    </>
   );
 }
