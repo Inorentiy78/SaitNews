@@ -1,6 +1,6 @@
 // news.jsx
 import React, { useState } from "react";
-import { Box, Grid } from "@mui/material";
+import { Box, Divider, Grid, ImageList, ImageListItem, Stack } from "@mui/material";
 import Post from "./newscard";
 import NewsList from "./newslist";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"; // Добавлен импорт BrowserRouter
@@ -132,7 +132,7 @@ const posts = [
  },
  {
     title: "Город Уральск в Эмоциях",
-    datetime: "22 июля 2024 год",
+    datetime: "22 июля 2023 год",
     description: `Город, превращаясь в настоящий мультикультурный калейдоскоп, 
     становится идеальным местом для погружения в вихрь праздников и фестивалей, 
     приносящих неповторимые впечатления как местным жителям, так и гостям.
@@ -208,7 +208,8 @@ const posts = [
   оперативно реагировать на изменения в эпидемиологической обстановке, обеспечивая безопасность и заботу о здоровье детей города.`,
   image: "https://vlast.kz/media/pages/cr/1610965901i9sr6_1000x768.jpg",
   postId: "12",
-];
+}
+]
 
 export default function News() {
   const [expandedNewsIndex, setExpandedNewsIndex] = useState(null);
@@ -222,30 +223,22 @@ export default function News() {
       <Box mt={4}>
         <Switch>
           <Route exact path="/">
-            <Grid container spacing={4} justifyContent="center">
+            <ImageList cols={3} gap={8} sx={{ '@media (max-width: 735px)': { cols: 2 } }}>
               {posts.map((post, index) => (
-                <Grid
-                  item
-                  xs={12}
-                  sm={6}
-                  md={6}
-                  lg={6}
-                  key={index}
-                  style={{ margin: 0, padding: 0, maxWidth: "48%", maxHeight: "1%" }}
-                >
+                <ImageListItem key={post.title}>
                   <Post
                     title={post.title}
-                    datetime={post.datetime}
                     description={post.description}
                     image={post.image}
+                    datetime={post.datetime}
                     index={index}
                     isExpanded={index === expandedNewsIndex}
-                    onLike={() => console.log("Liked!")}
-                    onDislike={() => console.log("Disliked!")}
+                    onLike={() => console.log('Liked!')}
+                    onDislike={() => console.log('Disliked!')}
                   />
-                </Grid>
+                </ImageListItem>
               ))}
-            </Grid>
+            </ImageList>
           </Route>
           <Route path="/news/:id" children={<NewsList posts={posts} />} />
         </Switch>
