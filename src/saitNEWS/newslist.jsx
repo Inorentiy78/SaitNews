@@ -1,41 +1,43 @@
-// newslist.jsx
-import React, { useState } from "react";
-import { Box, Grid } from "@mui/material";
-import Post from "./newscard";
-import NewsApp from "./newsapp";
+import React from 'react';
+import { useMediaQuery, useTheme, Box, ImageList, ImageListItem } from '@mui/material';
+import Post from './newscard';
 
-export default function NewsList({ posts }) {
-  const [expandedNewsIndex, setExpandedNewsIndex] = useState(null);
+const NewsList = ({ posts }) => {
+  const theme = useTheme();
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const onReadMore = (index) => {
-    setExpandedNewsIndex((prevIndex) => (prevIndex === index ? null : index));
-  };
+  let itemsPerRow = 3;
 
-  // Проверка наличия свойства posts перед его использованием
-  if (!posts) {
-    return null;
+  if (isMediumScreen) {
+    itemsPerRow = 2;
+  }
+
+  if (isSmallScreen) {
+    itemsPerRow = 1;
   }
 
   return (
     <Box mt={4}>
-      <Grid container spacing={4} justifyContent="center">
+      <ImageList cols={itemsPerRow} gap={8}>
         {posts.map((post, index) => (
-          <Grid item xs={12} sm={6} md={6} lg={6} key={index} style={{ margin: 0, padding: 0, maxWidth: "48%", maxHeight: "1%" }}>
+          <ImageListItem key={post.title}>
             <Post
               title={post.title}
-              datetime={post.datetime}
               description={post.description}
               image={post.image}
+              datetime={post.datetime}
               index={index}
-              isExpanded={index === expandedNewsIndex}
-              onLike={() => console.log("Liked!")}
-              onDislike={() => console.log("Disliked!")}
+              isExpanded={false}  // Всегда false, так как это список изображений
+              onLike={() => console.log('Liked!')}
+              onDislike={() => console.log('Disliked!')}
             />
-          </Grid>
+          </ImageListItem>
         ))}
-      </Grid>
-
-      <NewsApp />
+      </ImageList>
     </Box>
   );
-}
+};
+
+export default NewsList;
