@@ -53,7 +53,7 @@ export default function NewsCard({
   const [dislikeCount, setDislikeCount] = useState(0);
   const [expanded, setExpanded] = useState(false);
   const { id: routeId } = useParams(); // Изменение: получаем параметр id из URL
-
+  const [copied, setCopied] = useState(false); 
   const handleLikeClick = () => {
     setLikeCount((prevCount) => (prevCount === 0 ? 1 : 0));
     setDislikeCount(0);
@@ -151,14 +151,21 @@ export default function NewsCard({
               maxHeight: "80vh",
             }}
           >
-            <IconButton
+             <IconButton
               onClick={() => {
                 navigator.clipboard.writeText(`http://localhost:3000/news/${id || index}`);
+                setCopied(true);
+
+                // Устанавливаем таймер для сброса статуса "Скопировано" через 1 секунду
+                setTimeout(() => {
+                  setCopied(false);
+                }, 1000);
               }}
               style={{ position: "absolute", top: 0, left: 0 }}
             >
               <ShareIcon />
             </IconButton>
+            {copied && <div style={{ color: "green" }}>Скопировано</div>}
             <h1>{title}</h1>
             <CardMedia
               component="img"
