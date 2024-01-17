@@ -1,9 +1,9 @@
 // news.jsx
 import React, { useState } from "react";
-import { Box, Divider, Grid, ImageList, ImageListItem, Stack } from "@mui/material";
+import { Box, ImageList, ImageListItem } from "@mui/material";
 import Post from "./newscard";
-import NewsList from "./newslist";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom"; // Добавлен импорт BrowserRouter
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
 
 
 const posts = [
@@ -214,8 +214,12 @@ const posts = [
 export default function News() {
   const [expandedNewsIndex, setExpandedNewsIndex] = useState(null);
 
-  const onReadMore = (index) => {
-    setExpandedNewsIndex((prevIndex) => (prevIndex === index ? null : index));
+  const handleReadMore = (index) => {
+    setExpandedNewsIndex(index);
+  };
+
+  const handleCloseModal = () => {
+    setExpandedNewsIndex(null);
   };
 
   return (
@@ -225,7 +229,7 @@ export default function News() {
           <Route exact path="/">
             <ImageList cols={3} gap={8} sx={{ '@media (max-width: 735px)': { cols: 2 } }}>
               {posts.map((post, index) => (
-                <ImageListItem key={post.title}>
+                <ImageListItem key={post.id}>
                   <Post
                     title={post.title}
                     description={post.description}
@@ -235,12 +239,28 @@ export default function News() {
                     isExpanded={index === expandedNewsIndex}
                     onLike={() => console.log('Liked!')}
                     onDislike={() => console.log('Disliked!')}
+                    handleReadMore={() => handleReadMore(index)}
                   />
                 </ImageListItem>
               ))}
             </ImageList>
           </Route>
-          <Route path="/news/:id" children={<NewsList posts={posts} />} />
+          <Route path="/news/:id" children={({ match }) => {
+            const postIndex = match ? parseInt(match.params.id, 10) : null;
+            return postIndex !== null && postIndex < posts.length ? (
+              <Post
+                title={posts[postIndex].title}
+                description={posts[postIndex].description}
+                image={posts[postIndex].image}
+                datetime={posts[postIndex].datetime}
+                index={postIndex}
+                isExpanded={true}
+                onLike={() => console.log('Liked!')}
+                onDislike={() => console.log('Disliked!')}
+                handleReadMore={handleCloseModal}
+              />
+            ) : null;
+          }} />
         </Switch>
       </Box>
     </Router>
