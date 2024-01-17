@@ -24,13 +24,14 @@ const AdaptiveCard = styled(Card)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   width: '100%', // Используем 100% ширины на мобильных устройствах
-  margin: '10px', // Задайте нужное значение отступа
+  margin: '5px', // Уменьшим отступы для лучшей адаптации
   color: 'darkgreen',
   [theme.breakpoints.up('md')]: {
     width: '300px',
+    margin: '10px', // Возвращаем больший отступ для устройств с шириной экрана больше 700px
   },
   [theme.breakpoints.down('sm')]: {
-    width: '80%', // Изменяем ширину для экранов менее 700px
+    width: '90%', // Уменьшим ширину для экранов менее 700px
   },
 }));
 
