@@ -1,5 +1,5 @@
 // newscard.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -56,13 +56,7 @@ export default function NewsCard({
   const [copied, setCopied] = useState(false); 
   const [modalOpen, setModalOpen] = useState(false);
   const history = useHistory();
-  const { id: routeId } = useParams();
 
-  useEffect(() => {
-    if (routeId === id) {
-      handleReadMoreClick();
-    }
-  }, [routeId, id]);
 
   const handleLikeClick = () => {
     setLikeCount((prevCount) => (prevCount === 0 ? 1 : 0));
