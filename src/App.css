@@ -14,14 +14,17 @@
 }
 
 .App-header {
-  background-color: #ffffff;
+  background-image: url('https://kartinki.pibig.info/uploads/posts/2023-04/1682008300_kartinki-pibig-info-p-kartinki-v-nezhnikh-tonakh-arti-pinterest-35.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: rgb(96, 84, 84);
 }
 
 .App-link {
