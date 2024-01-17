@@ -1,4 +1,3 @@
-// newscard.jsx
 import React, { useState } from "react";
 import {
   Card,
@@ -14,11 +13,9 @@ import {
 } from "@mui/material";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
-import CloseIcon from "@mui/icons-material/Close";
 import ShareIcon from '@mui/icons-material/Share';
 import { styled } from '@mui/system';
-import { Link, useParams } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 const AdaptiveCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -27,11 +24,12 @@ const AdaptiveCard = styled(Card)(({ theme }) => ({
   margin: '5px', // Уменьшим отступы для лучшей адаптации
   color: 'darkgreen',
   [theme.breakpoints.up('md')]: {
-    width: '300px',
+    width: '250px',
     margin: '10px', // Возвращаем больший отступ для устройств с шириной экрана больше 700px
   },
   [theme.breakpoints.down('sm')]: {
     width: '90%', // Уменьшим ширину для экранов менее 700px
+    margin: '5px', // Можете настроить отступы для мобильных устройств по-другому, если нужно
   },
 }));
 
@@ -49,15 +47,31 @@ export default function NewsCard({
   dislikes,
   id,
 }) {
-  const [liked, setLiked] = useState(false);
-  const [disliked, setDisliked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
-  const [dislikeCount, setDislikeCount] = useState(0);
-  const [expanded, setExpanded] = useState(false);
-  const [copied, setCopied] = useState(false); 
-  const [modalOpen, setModalOpen] = useState(false);
   const history = useHistory();
+  const [expanded, setExpanded] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [disliked, setDisliked] = useState(false);
+  const [dislikeCount, setDislikeCount] = useState(0);
 
+  const handleReadMoreClick = () => {
+    setExpanded(true);
+    handleReadMore && handleReadMore(index);
+
+    if (history) {
+      history.push(`/news/${id || index}`);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setExpanded(false);
+    onCloseModal && onCloseModal();
+
+    if (history) {
+      history.push('/news');
+    }
+  };
 
   const handleLikeClick = () => {
     setLikeCount((prevCount) => (prevCount === 0 ? 1 : 0));
@@ -75,17 +89,6 @@ export default function NewsCard({
     onDislike && onDislike(index);
   };
 
-  const handleCloseModal = () => {
-    setExpanded(false);
-    onCloseModal && onCloseModal();
-  };
-
-  const handleReadMoreClick = () => {
-    setExpanded(true);
-    handleReadMore && handleReadMore(index);
-  };
-  
-
   return (
     <>
       <AdaptiveCard>
@@ -93,7 +96,7 @@ export default function NewsCard({
           variant="h6"
           noWrap
           component={Link}
-          to={`/news/${id || index}`} // Исправлено: теперь используется id вместо index
+          to={`/news/${id || index}`}
           sx={{
             fontFamily: "monospace",
             fontWeight: 700,
@@ -140,10 +143,10 @@ export default function NewsCard({
               </IconButton>
             </CardActions>
           </Grid>
-          </Grid>
+        </Grid>
       </AdaptiveCard>
-      <Modal open={expanded} onClose={handleCloseModal}>
-        <ClickAwayListener onClickAway={handleCloseModal}>
+      <Modal open={expanded} onClose={handleCloseModal}>        
+      <ClickAwayListener onClickAway={handleCloseModal}>
           <div
             style={{
               position: "absolute",
